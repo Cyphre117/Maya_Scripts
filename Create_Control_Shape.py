@@ -8,6 +8,7 @@ if len(selected_joints) > 0 :
     joint_name       = selected_joints[0]
     ctrl_shape_namne = "ctrl" + joint_name[3:]
     grp_name         = "grp" + joint_name[3:]
+    constraint_name  = joint_name + "_pin_constraint"
 
     print( "\nJoints Selected: " + str(len(selected_joints)) )
     print( joint_name )
@@ -21,8 +22,15 @@ if len(selected_joints) > 0 :
     cmds.group( empty=True, name=grp_name, parent=joint_name )    
 
     # parent the shape to the group
-    #cmds.parent( ctrl_shape_name, grp_name )
-    
-    # zero out the translation and rotation of the shape
+    # the translation and rotation of the shape should be implicitly zero when relative=True
+    cmds.parent( ctrl_shape_namne, grp_name, relative=True )
     
     # unparent the shape
+    cmds.parent( grp_name, world=True )
+    
+    # constain the shape to the parent, currently using a parent constraint
+    # could change this to a orient or aim constraint based on user input
+    cmds.parentConstraint( ctrl_shape_namne, joint_name, name=constraint_name )
+    
+else:
+    print( "No Joint Selected!" )
