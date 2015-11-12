@@ -17,17 +17,19 @@ form_layout = maya.cmds.formLayout()
 background_image = cmds.image(image="hellknight.png")
     
 # Create the controls,
-r_wrist_button = cmds.button(label="", w=20, h=20, bgc=(0.2, 0.2, 1.0), command="pass")
-l_wrist_button = cmds.button(label="", w=20, h=20, bgc=(1.0, 0.2, 0.2), command="pass")
-r_leg_button   = cmds.button(label="", w=20, h=20, bgc=(0.2, 0.2, 1.0), command="pass")
-l_leg_button   = cmds.button(label="", w=20, h=20, bgc=(1.0, 0.2, 0.2), command="pass")
+r_wrist_button = cmds.button(label="", w=20,  h=20, bgc=(0.2, 0.2, 1.0), command="pass")
+l_wrist_button = cmds.button(label="", w=20,  h=20, bgc=(1.0, 0.2, 0.2), command="pass")
+r_leg_button   = cmds.button(label="", w=20,  h=20, bgc=(0.2, 0.2, 1.0), command="pass")
+l_leg_button   = cmds.button(label="", w=20,  h=20, bgc=(1.0, 0.2, 0.2), command="pass")
+pelvis_button  = cmds.button(label="", w=70, h=10, bgc=(1.0, 1.0, 1.0), command="pass")
+master_button  = cmds.button(label="", w=200, h=10, bgc=(1.0, 1.0, 1.0), command="pass")
 
 # set the parent back to the window so we can possiton our objects on the form
 #cmds.setParent("..")
 
 # Position the image in the layout
 cmds.formLayout(form_layout, edit=True,
-    attachForm=[[background_image, "top", 110],[background_image, "left", 80]])
+    attachForm=[[background_image, "left", 78],[background_image, "top", 110]])
     
 # Position the controls
 cmds.formLayout(form_layout, edit=True,
@@ -38,6 +40,10 @@ cmds.formLayout(form_layout, edit=True,
     attachForm=[[r_leg_button,"left",200],[r_leg_button,"top",400]])
 cmds.formLayout(form_layout, edit=True,
     attachForm=[[l_leg_button,"left",280],[l_leg_button,"top",400]])
+cmds.formLayout(form_layout, edit=True,
+    attachForm=[[pelvis_button,"left",WIDTH()/2-35],[pelvis_button,"top",250]])
+cmds.formLayout(form_layout, edit=True,
+    attachForm=[[master_button,"left",WIDTH()/2-100],[master_button,"top",480]])
 
 # display the window
 cmds.showWindow()
