@@ -11,11 +11,10 @@ window_name = cmds.window(widthHeight=(WIDTH(), HEIGHT()), title="Hellknight Pic
 
 form_layout = cmds.formLayout()
 tab_layout = cmds.tabLayout(innerMarginWidth=5, innerMarginHeight=5)
-cmds.formLayout(form_layout, edit=True,
-                attachForm=((tab_layout, 'top', 0),
-                            (tab_layout, 'left', 0),
-                            (tab_layout, 'bottom', 0),
-                            (tab_layout, 'right', 0)) )
+cmds.formLayout(form_layout, edit=True, attachForm=((tab_layout, 'top', 0),
+                                                    (tab_layout, 'left', 0),
+                                                    (tab_layout, 'bottom', 0),
+                                                    (tab_layout, 'right', 0)) )
 
 ## Setup the model picker tab
 model_tab = cmds.formLayout(width=200, height=200)
@@ -34,11 +33,16 @@ cmds.formLayout(model_tab, e=True, af=[[resetall_button,"left",WIDTH()/2+10],[re
 
 ## Setup the foot tab
 cmds.setParent( tab_layout )
-feet_tab = cmds.rowColumnLayout(numberOfColumns=2)
+feet_tab = cmds.rowColumnLayout(numberOfColumns=3,
+                                columnWidth=[(1, WIDTH()/5), (2, WIDTH()/5*3), (3, WIDTH()/5)],
+                                columnAttach=[(1, 'both', 0), (2, 'both', 10), (3, 'both', 10)])
 
-cmds.button()
-cmds.button()
-cmds.button()
+cmds.text(label="Heel Lift", align="right")
+cmds.floatSlider()
+cmds.button(label="Reset")
+cmds.text(label="Toe Lift", align="right")
+cmds.floatSlider()
+cmds.button(label="Reset")
 
 ## Setup the hands tab
 cmds.setParent( tab_layout )
@@ -47,6 +51,7 @@ hands_tab = cmds.rowColumnLayout(numberOfColumns=2)
 cmds.button()
 cmds.button()
 cmds.button()
+cmds.intSlider()
 
 # Name the tabs
 cmds.setParent( tab_layout )
