@@ -6,6 +6,51 @@ def WIDTH():
 def HEIGHT():
     return 500
     
+# A list of attributes that should be reset on control shapes ...
+# ... one of the reset buttons is pressed
+attributes_to_reset = ['translateX', 'translateY', 'translateZ',
+                       'rotateX', 'rotateY', 'rotateZ',
+                       'Pinky_Curl', 'Mid_Curl', 'Index_Curl',
+                       'Thumb_Curl', 'Thumb_Side', 'Spread', 'All_Curl']
+    
+# Resets the attributes of the currently selected control shape
+def reset_selected_ctrl(*args):
+    selection = cmds.ls(selection=True)
+    ctrl = [c for c in selection if 'ctrl_' in c]
+    # Check there was a contol shape selected
+    if len(ctrl) == 0:
+        cmds.confirmDialog(title='Reset Control Shapes', message='Select a control to reset', button='Ok')
+        return
+    # Create a list of attributes to reset
+    name = ctrl[0]
+    # if the attribute exists, and is settable, reset it
+    for attr in attributes_to_reset:
+        if cmds.attributeQuery(attr, node=name, exists=True) == True:
+            if cmds.getAttr(name+'.'+attr, settable=True) == True:
+                cmds.setAttr(name+'.'+attr, 0.0)
+                print(attr+" reset")
+            else:
+                print(attr+" not settable")
+        else:
+            print(attr+" not found")        
+
+# Resets the attributes of all control shapes
+def reset_all_ctrls(*args):
+    transforms = cmds.ls(exactType="transform")
+    ctrls = [c for c in transforms if 'ctrl_'  in c]
+    if len(ctrls) == 0:
+        cmds.confirmDialog(title='Reset Control Shapes', message='No control shapes found, check the debug tab', button='OK')
+        return
+    # loop through all the found control shapes
+    for ctrl in ctrls:
+        # if the attribute exists, and is settable, reset it
+        for attr in attributes_to_reset:
+            if cmds.attributeQuery(attr, node=ctrl, exists=True) == True:
+                if cmds.getAttr(ctrl+'.'+attr, settable=True) == True:
+                    cmds.setAttr(ctrl+'.'+attr, 0.0)
+    print("------------------------------------")
+    print("Finished reseting all control shapes")
+    
 # Setup the window
 window_name = cmds.window(widthHeight=(WIDTH(), HEIGHT()), title="Hellknight Picker", sizeable=False)
 tab_layout = cmds.tabLayout(innerMarginWidth=5, innerMarginHeight=5)
@@ -15,15 +60,15 @@ model_tab = cmds.formLayout(width=WIDTH()-20, height=HEIGHT()-80)
     
 # Create the right controls
 r_shoulder_btn  = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_arm_shoulder')", ann='ctrl_R_arm_shoulder')
-r_elbow_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_arm_elbow')", ann='ctrl_R_arm_elbow')
+r_elbow_btn     = cmds.iconTextButton(w= 15, h=15, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_arm_elbow')", ann='ctrl_R_arm_elbow')
 r_wrist_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_arm_wrist')", ann='ctrl_R_arm_wrist')
-r_knee_btn      = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_leg_knee')", ann='ctrl_R_leg_knee')
+r_knee_btn      = cmds.iconTextButton(w= 15, h=15, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_leg_knee')", ann='ctrl_R_leg_knee')
 r_ankle_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_leg_ankle')", ann='ctrl_R_leg_ankle')
 # Create the left controls
 l_shoulder_btn  = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_arm_shoulder')", ann='ctrl_L_arm_shoulder')
-l_elbow_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_arm_elbow')", ann='ctrl_L_arm_elbow')
+l_elbow_btn     = cmds.iconTextButton(w= 15, h=15, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_arm_elbow')", ann='ctrl_L_arm_elbow')
 l_wrist_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_arm_wrist')", ann='ctrl_L_arm_wrist')
-l_knee_btn      = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_leg_knee')", ann='ctrl_L_leg_knee')
+l_knee_btn      = cmds.iconTextButton(w= 15, h=15, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_leg_knee')", ann='ctrl_L_leg_knee')
 l_leg_btn       = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_leg_ankle')", ann='ctrl_L_leg_ankle')
 # Create the mid controls
 spine_top_btn   = cmds.iconTextButton(w= 60, h=10, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_spine_top')", ann='ctrl_spine_top')
@@ -62,8 +107,8 @@ cmds.formLayout(model_tab, e=True, af=[[root_btn, "left", WIDTH()/2-45 ],[root_b
 cmds.formLayout(model_tab, e=True, af=[[master_btn, "left", WIDTH()/2-100],[master_btn, "bottom",60]])
 
 # Setup the reset buttons
-resetall_btn = cmds.button(label="Reset All",      w=WIDTH()/2-20, command="pass")
-resetsel_btn = cmds.button(label="Reset Selected", w=WIDTH()/2-20, command="pass")
+resetall_btn = cmds.button(label="Reset All",      w=WIDTH()/2-20, command=reset_all_ctrls)
+resetsel_btn = cmds.button(label="Reset Selected", w=WIDTH()/2-20, command=reset_selected_ctrl)
 cmds.formLayout(model_tab, e=True, af=[[resetsel_btn,"left",  10],[resetsel_btn,"bottom",10]])
 cmds.formLayout(model_tab, e=True, af=[[resetall_btn,"right", 10],[resetall_btn,"bottom",10]])
 
