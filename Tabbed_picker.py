@@ -10,17 +10,24 @@ def HEIGHT():
 window_name = cmds.window(widthHeight=(WIDTH(), HEIGHT()), title="Hellknight Picker", sizeable=False)
 
 form_layout = cmds.formLayout()
+
 tab_layout = cmds.tabLayout(innerMarginWidth=5, innerMarginHeight=5)
 cmds.formLayout(form_layout, edit=True, attachForm=((tab_layout, 'top', 0),
                                                     (tab_layout, 'left', 0),
                                                     (tab_layout, 'bottom', 0),
                                                     (tab_layout, 'right', 0)) )
+
 ## Setup the model picker tab
-model_tab = cmds.formLayout(width=200, height=200)
+model_tab = cmds.formLayout(width=WIDTH()-20, height=HEIGHT()-80)
+
+# Load the image from Documents/maya/2015-x64/prefs/icons on Windows
+# or from ~/Library/Preferences/Autodesk/maya/2015-x64/prefs/icons on OSX
+background_image = cmds.image(image="HellknightBG.png")
 
 pelvis_button = cmds.button(label="", w= 70, h=10, bgc=(1.0, 1.0, 1.0), command="pass")
 master_button = cmds.button(label="", w=200, h=10, bgc=(1.0, 1.0, 1.0), command="pass")
 
+cmds.formLayout(model_tab, e=True, af=[[background_image, "left", 0],[background_image, "top", 0]])
 cmds.formLayout(model_tab, e=True, af=[[pelvis_button,"left",WIDTH()/2- 35],[pelvis_button,"top",250]])
 cmds.formLayout(model_tab, e=True, af=[[master_button,"left",WIDTH()/2-100],[master_button,"top",480]])
 
