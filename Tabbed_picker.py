@@ -14,22 +14,23 @@ tab_layout = cmds.tabLayout(innerMarginWidth=5, innerMarginHeight=5)
 model_tab = cmds.formLayout(width=WIDTH()-20, height=HEIGHT()-80)
     
 # Create the right controls
-r_shoulder_btn  = cmds.iconTextButton(w= 20, h=20, bgc=(0.2, 0.2, 1.0), command="pass")
-r_elbow_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(0.2, 0.2, 1.0), command="pass")
-r_wrist_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(0.2, 0.2, 1.0), command="pass")
-r_knee_btn      = cmds.iconTextButton(w= 20, h=20, bgc=(0.2, 0.2, 1.0), command="pass")
-r_leg_btn       = cmds.iconTextButton(w= 20, h=20, bgc=(0.2, 0.2, 1.0), command="pass")
+r_shoulder_btn  = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_arm_shoulder')", ann='ctrl_R_arm_shoulder')
+r_elbow_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_arm_elbow')", ann='ctrl_R_arm_elbow')
+r_wrist_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_arm_wrist')", ann='ctrl_R_arm_wrist')
+r_knee_btn      = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_leg_knee')", ann='ctrl_R_leg_knee')
+r_ankle_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="cmds.select('ctrl_R_leg_ankle')", ann='ctrl_R_leg_ankle')
 # Create the left controls
-l_shoulder_btn  = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="left")
-l_elbow_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="left")
-l_wrist_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="left")
-l_knee_btn      = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="left")
-l_leg_btn       = cmds.iconTextButton(w= 20, h=20, bgc=(1.0, 0.2, 0.2), command="left")
+l_shoulder_btn  = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_arm_shoulder')", ann='ctrl_L_arm_shoulder')
+l_elbow_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_arm_elbow')", ann='ctrl_L_arm_elbow')
+l_wrist_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_arm_wrist')", ann='ctrl_L_arm_wrist')
+l_knee_btn      = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_leg_knee')", ann='ctrl_L_leg_knee')
+l_leg_btn       = cmds.iconTextButton(w= 20, h=20, bgc=(0.0, 0.2, 1.0), command="cmds.select('ctrl_L_leg_ankle')", ann='ctrl_L_leg_ankle')
 # Create the mid controls
-spine_btn       = cmds.iconTextButton(w= 60, h=10, bgc=(1.0, 1.0, 1.0), command="pass")
-waist_btn       = cmds.iconTextButton(w= 70, h=12, bgc=(1.0, 1.0, 1.0), command="pass")
-pelvis_btn      = cmds.iconTextButton(w= 90, h=12, bgc=(1.0, 1.0, 1.0), command="pass")
-master_btn      = cmds.iconTextButton(w=200, h=12, bgc=(1.0, 1.0, 1.0), command="pass")
+spine_top_btn   = cmds.iconTextButton(w= 60, h=10, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_spine_top')", ann='ctrl_spine_top')
+spine_mid_btn   = cmds.iconTextButton(w= 50, h=10, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_spine_mid')", ann='ctrl_spine_mid')
+spine_bot_btn   = cmds.iconTextButton(w= 70, h=12, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_spine_bot')", ann='ctrl_spine_bot')
+root_btn        = cmds.iconTextButton(w= 90, h=12, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_body_root')", ann='ctrl_body_root')
+master_btn      = cmds.iconTextButton(w=200, h=12, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_master')", ann='ctrl_master')
 
 # Position the right controls
 cmds.formLayout(model_tab, e=True, af=[[r_shoulder_btn, "right",WIDTH()/2+20],
@@ -40,23 +41,24 @@ cmds.formLayout(model_tab, e=True, af=[[r_wrist_btn,    "right",WIDTH()/2+90],
                                        [r_wrist_btn,    "top",      120]])
 cmds.formLayout(model_tab, e=True, af=[[r_knee_btn,     "right",WIDTH()/2+40],
                                        [r_knee_btn,     "bottom",   130]])
-cmds.formLayout(model_tab, e=True, af=[[r_leg_btn,      "right",WIDTH()/2+40],
-                                       [r_leg_btn,      "bottom",   80]])
+cmds.formLayout(model_tab, e=True, af=[[r_ankle_btn,    "right",WIDTH()/2+40],
+                                       [r_ankle_btn,    "bottom",   80]])
 # Position the left controls
 cmds.formLayout(model_tab, e=True, af=[[l_shoulder_btn, "left", WIDTH()/2+20],
-                                       [l_shoulder_btn, "top",      20]])
+                                       [l_shoulder_btn, "top",      60]])
 cmds.formLayout(model_tab, e=True, af=[[l_elbow_btn,    "left", WIDTH()/2+50],
-                                       [l_elbow_btn,    "top",      60]])
+                                       [l_elbow_btn,    "top",      80]])
 cmds.formLayout(model_tab, e=True, af=[[l_wrist_btn,    "left", WIDTH()/2+90],
-                                       [l_wrist_btn,    "top",      100]])
+                                       [l_wrist_btn,    "top",      120]])
 cmds.formLayout(model_tab, e=True, af=[[l_knee_btn,     "left", WIDTH()/2+40],
                                        [l_knee_btn,     "bottom",   130]])
 cmds.formLayout(model_tab, e=True, af=[[l_leg_btn,      "left", WIDTH()/2+40],
                                        [l_leg_btn,      "bottom",   80]])
 
-cmds.formLayout(model_tab, e=True, af=[[spine_btn,  "left", WIDTH()/2-30 ],[spine_btn, "bottom",HEIGHT()/2+60]])
-cmds.formLayout(model_tab, e=True, af=[[waist_btn,  "left", WIDTH()/2-35 ],[waist_btn, "bottom",HEIGHT()/2]])
-cmds.formLayout(model_tab, e=True, af=[[pelvis_btn, "left", WIDTH()/2-45 ],[pelvis_btn, "top",HEIGHT()/2]])
+cmds.formLayout(model_tab, e=True, af=[[spine_top_btn,  "left", WIDTH()/2-30 ],[spine_top_btn, "top",100]])
+cmds.formLayout(model_tab, e=True, af=[[spine_mid_btn,  "left", WIDTH()/2-25 ],[spine_mid_btn, "bottom",HEIGHT()/2+60]])
+cmds.formLayout(model_tab, e=True, af=[[spine_bot_btn,  "left", WIDTH()/2-35 ],[spine_bot_btn, "bottom",HEIGHT()/2]])
+cmds.formLayout(model_tab, e=True, af=[[root_btn, "left", WIDTH()/2-45 ],[root_btn, "top",HEIGHT()/2]])
 cmds.formLayout(model_tab, e=True, af=[[master_btn, "left", WIDTH()/2-100],[master_btn, "bottom",60]])
 
 # Setup the reset buttons
@@ -116,9 +118,17 @@ cmds.connectControl( tsi_grp, '%s.Thumb_Side' % 'ctrl_R_arm_wrist' )
 spr_grp = cmds.floatSliderGrp( l='Spread', field=True, min=-20, max=20, value=0, cw=[(1,80),(2,60),(3,WIDTH()-160)] )
 cmds.connectControl( spr_grp, '%s.Spread' % 'ctrl_R_arm_wrist' )
 
+## Setup debug tab
+cmds.setParent( tab_layout )
+debug_tab = cmds.columnLayout( width=WIDTH(), adjustableColumn=True )
+
+transforms_list = cmds.ls(exactType="transform", visible=True)
+
+cmds.textScrollList( numberOfRows=24, allowMultiSelection=False, append=transforms_list )
+
 # Name the tabs
 cmds.setParent( tab_layout )
-cmds.tabLayout( tab_layout, edit=True, tabLabel=((model_tab, 'Model'), (feet_tab, 'Feet'), (hands_tab, 'Hands')) )
+cmds.tabLayout( tab_layout, edit=True, tabLabel=((model_tab, 'Model'), (feet_tab, 'Feet'), (hands_tab, 'Hands'), (debug_tab, 'Debug')) )
 
 # Display the window
 cmds.showWindow()
