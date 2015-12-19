@@ -35,14 +35,24 @@ cmds.formLayout(model_tab, e=True, af=[[resetall_button,"left",WIDTH()/2+10],[re
 cmds.setParent( tab_layout )
 feet_tab = cmds.rowColumnLayout(numberOfColumns=3,
                                 columnWidth=[(1, WIDTH()/5), (2, WIDTH()/5*3), (3, WIDTH()/5)],
-                                columnAttach=[(1, 'both', 0), (2, 'both', 10), (3, 'both', 10)])
+                                columnAttach=[(1, 'both', 5), (2, 'both', 5), (3, 'both', 10)])
 
 cmds.text(label="Heel Lift", align="right")
-cmds.floatSlider()
-cmds.button(label="Reset")
+hl_slider = cmds.floatSlider(min=-20, max=20, value=0, step=0.1)
+hl_field = cmds.floatField()
+
+cmds.connectControl( hl_slider, '%s.Custom' % 'pSphere1' )
+
 cmds.text(label="Toe Lift", align="right")
-cmds.floatSlider()
-cmds.button(label="Reset")
+tl_slider = cmds.floatSlider(min=-20, max=20, value=0, step=0.1)
+cmds.button(label="Reset", command='cmds.floatSlider(tl_slider,e=True,v=0)')
+
+cmds.setParent( tab_layout )
+cmds.columnLayout()
+
+fl_slider = cmds.floatSliderGrp( label='Group 1', field=True )
+cmds.connectControl( fl_slider, '%s.tx' % 'pSphere1' )
+
 
 ## Setup the hands tab
 cmds.setParent( tab_layout )
