@@ -7,7 +7,7 @@ def HEIGHT():
     return 500
     
 # A list of attributes that should be reset on control shapes ...
-# ... one of the reset buttons is pressed
+# ... when one of the reset buttons is pressed
 attributes_to_reset = ['translateX', 'translateY', 'translateZ',
                        'rotateX', 'rotateY', 'rotateZ',
                        'Pinky_Curl', 'Mid_Curl', 'Index_Curl',
@@ -79,7 +79,35 @@ def insert_renamefield_text(*args):
 
 # Set the list of transform nodes to be displayed in the rename tab
 def get_transforms_list(*args):    
-    return cmds.ls(exactType="transform", visible=True)
+    return cmds.ls(type="transform", visible=True)
+
+# Toggles the visibility of control shapes
+def toggle_ctrl_vis(*args):
+    # Get a list of the ctrl shapes
+    transforms = cmds.ls(exactType="transform")
+    ctrls = [c for c in transforms if 'ctrl_'  in c]
+    if toggle_ctrl_vis.visible == True:
+        # If they are visible, set them all to not visible
+        for c in ctrls:
+            cmds.setAttr(c+'.v', False)
+        toggle_ctrl_vis.visible = False
+        # Keep the master ctrl always visible
+        cmds.setAttr('ctrl_master.v', True)
+    else:
+        # If they are not visible, set them all to visible
+        for c in ctrls:
+            cmds.setAttr(c+'.v', True)
+        toggle_ctrl_vis.visible = True
+     
+# Weather control shapes are visible
+toggle_ctrl_vis.visible = True
+    
+# Toggles the visibility of joints        
+def toggle_jnt_vis(*args):
+    toggle_jnt_vis.visible = toggle_jnt_vis.visible != True
+    cmds.setAttr('jnt_body_root.v', toggle_jnt_vis.visible)
+            
+toggle_jnt_vis.visible = True
 
 # Setup the window
 window_name = cmds.window(widthHeight=(WIDTH(), HEIGHT()), title="Hellknight Picker", sizeable=False)
@@ -129,8 +157,12 @@ cmds.formLayout(model_tab, e=True, af=[[master_btn, "left", WIDTH()/2-100],[mast
 # Setup the reset buttons
 resetall_btn = cmds.button(label="Reset All",      w=WIDTH()/2-20, command=reset_all_ctrls)
 resetsel_btn = cmds.button(label="Reset Selected", w=WIDTH()/2-20, command=reset_selected_ctrl)
+togctrls_btn = cmds.button(label="Show Controls",  w=WIDTH()/2-20, command=toggle_ctrl_vis)
+togjoint_btn = cmds.button(label="Show Joints",    w=WIDTH()/2-20, command=toggle_jnt_vis)
 cmds.formLayout(model_tab, e=True, af=[[resetsel_btn,"left",  10],[resetsel_btn,"bottom",10]])
 cmds.formLayout(model_tab, e=True, af=[[resetall_btn,"right", 10],[resetall_btn,"bottom",10]])
+cmds.formLayout(model_tab, e=True, af=[[togctrls_btn,"left",  10],[togctrls_btn,"top",10]])
+cmds.formLayout(model_tab, e=True, af=[[togjoint_btn,"right", 10],[togjoint_btn,"top",10]])
 
 ## Setup the foot tab ##
 cmds.setParent( tab_layout )
@@ -232,7 +264,6 @@ transforms_text_list = cmds.textScrollList(numberOfRows=24,
                                            append=get_transforms_list(),
                                            w=WIDTH()-8,
                                            selectCommand=insert_renamefield_text)
-
 # a text box for renaming
 cmds.separator(style="none", height=8)
 rename_field = cmds.textField(w=WIDTH()-8)
