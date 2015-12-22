@@ -76,10 +76,12 @@ def insert_renamefield_text(*args):
         return
     # Set the text field to the selected item
     cmds.textField(rename_field, edit=True, text=selected[0])
+    # Select that item in the scene
+    cmds.select(selected[0])
 
 # Set the list of transform nodes to be displayed in the rename tab
 def get_transforms_list(*args):    
-    return cmds.ls(type="transform", visible=True)
+    return cmds.ls(type="transform")
 
 # Toggles the visibility of control shapes
 def toggle_ctrl_vis(*args):
@@ -98,16 +100,29 @@ def toggle_ctrl_vis(*args):
         for c in ctrls:
             cmds.setAttr(c+'.v', True)
         toggle_ctrl_vis.visible = True
+    update_vis_buttons()
      
 # Weather control shapes are visible
-toggle_ctrl_vis.visible = True
+toggle_ctrl_vis.visible = cmds.getAttr('ctrl_body_root.v')
     
 # Toggles the visibility of joints        
 def toggle_jnt_vis(*args):
     toggle_jnt_vis.visible = toggle_jnt_vis.visible != True
     cmds.setAttr('jnt_body_root.v', toggle_jnt_vis.visible)
+    update_vis_buttons()
             
-toggle_jnt_vis.visible = True
+toggle_jnt_vis.visible = cmds.getAttr('jnt_body_root.v')
+
+# Upades the label state of the visibilty toggle buttons
+def update_vis_buttons(*args):
+    if toggle_jnt_vis.visible:
+        cmds.button(togjoint_btn, edit=True, label="Hide Joints")
+    else:
+        cmds.button(togjoint_btn, edit=True, label="Show Joints")                
+    if toggle_ctrl_vis.visible:
+        cmds.button(togctrls_btn, edit=True, label="Hide Controls")          
+    else:
+        cmds.button(togctrls_btn, edit=True, label="Show Controls")        
 
 # Setup the window
 window_name = cmds.window(widthHeight=(WIDTH(), HEIGHT()), title="Hellknight Picker", sizeable=False)
@@ -129,6 +144,8 @@ l_wrist_btn     = cmds.iconTextButton(w= 20, h=20, bgc=(0.2, 0.2, 1.0), command=
 l_knee_btn      = cmds.iconTextButton(w= 15, h=15, bgc=(0.2, 0.2, 1.0), command="cmds.select('ctrl_L_leg_knee')",       ann='ctrl_L_leg_knee')
 l_leg_btn       = cmds.iconTextButton(w= 20, h=20, bgc=(0.2, 0.2, 1.0), command="cmds.select('ctrl_L_leg_ankle')",      ann='ctrl_L_leg_ankle')
 # Create the mid controls
+head_btn        = cmds.iconTextButton(w= 30, h=30, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_body_head')",    ann='ctrl_body_head')
+jaw_btn         = cmds.iconTextButton(w= 20, h=8, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_body_jaw')",      ann='ctrl_body_jaw')
 spine_top_btn   = cmds.iconTextButton(w= 60, h=10, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_spine_top')",    ann='ctrl_spine_top')
 spine_mid_btn   = cmds.iconTextButton(w= 50, h=10, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_spine_mid')",    ann='ctrl_spine_mid')
 spine_bot_btn   = cmds.iconTextButton(w= 70, h=12, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_spine_bot')",    ann='ctrl_spine_bot')
@@ -136,33 +153,36 @@ root_btn        = cmds.iconTextButton(w= 90, h=12, bgc=(1.0, 1.0, 1.0), command=
 master_btn      = cmds.iconTextButton(w=200, h=12, bgc=(1.0, 1.0, 1.0), command="cmds.select('ctrl_master')",       ann='ctrl_master')
 
 # Position the right controls
-cmds.formLayout(model_tab, e=True, af=[[r_shoulder_btn, "right",WIDTH()/2+20], [r_shoulder_btn, "top",     60]])
-cmds.formLayout(model_tab, e=True, af=[[r_elbow_btn,    "right",WIDTH()/2+50], [r_elbow_btn,    "top",     80]])
-cmds.formLayout(model_tab, e=True, af=[[r_wrist_btn,    "right",WIDTH()/2+90], [r_wrist_btn,    "top",    120]])
-cmds.formLayout(model_tab, e=True, af=[[r_knee_btn,     "right",WIDTH()/2+40], [r_knee_btn,     "bottom", 130]])
+cmds.formLayout(model_tab, e=True, af=[[r_shoulder_btn, "right",WIDTH()/2+30], [r_shoulder_btn, "top",    100]])
+cmds.formLayout(model_tab, e=True, af=[[r_elbow_btn,    "right",WIDTH()/2+60], [r_elbow_btn,    "top",    140]])
+cmds.formLayout(model_tab, e=True, af=[[r_wrist_btn,    "right",WIDTH()/2+90], [r_wrist_btn,    "top",    180]])
+cmds.formLayout(model_tab, e=True, af=[[r_knee_btn,     "right",WIDTH()/2+30], [r_knee_btn,     "bottom", 140]])
 cmds.formLayout(model_tab, e=True, af=[[r_ankle_btn,    "right",WIDTH()/2+40], [r_ankle_btn,    "bottom",  80]])
 # Position the left controls
-cmds.formLayout(model_tab, e=True, af=[[l_shoulder_btn, "left", WIDTH()/2+20], [l_shoulder_btn, "top",     60]])
-cmds.formLayout(model_tab, e=True, af=[[l_elbow_btn,    "left", WIDTH()/2+50], [l_elbow_btn,    "top",     80]])
-cmds.formLayout(model_tab, e=True, af=[[l_wrist_btn,    "left", WIDTH()/2+90], [l_wrist_btn,    "top",    120]])
-cmds.formLayout(model_tab, e=True, af=[[l_knee_btn,     "left", WIDTH()/2+40], [l_knee_btn,     "bottom", 130]])
+cmds.formLayout(model_tab, e=True, af=[[l_shoulder_btn, "left", WIDTH()/2+30], [l_shoulder_btn, "top",    100]])
+cmds.formLayout(model_tab, e=True, af=[[l_elbow_btn,    "left", WIDTH()/2+60], [l_elbow_btn,    "top",    140]])
+cmds.formLayout(model_tab, e=True, af=[[l_wrist_btn,    "left", WIDTH()/2+90], [l_wrist_btn,    "top",    180]])
+cmds.formLayout(model_tab, e=True, af=[[l_knee_btn,     "left", WIDTH()/2+30], [l_knee_btn,     "bottom", 140]])
 cmds.formLayout(model_tab, e=True, af=[[l_leg_btn,      "left", WIDTH()/2+40], [l_leg_btn,      "bottom",  80]])
 # Position the spine controls
-cmds.formLayout(model_tab, e=True, af=[[spine_top_btn,  "left", WIDTH()/2-30 ],[spine_top_btn, "top",100]])
-cmds.formLayout(model_tab, e=True, af=[[spine_mid_btn,  "left", WIDTH()/2-25 ],[spine_mid_btn, "bottom",HEIGHT()/2+60]])
-cmds.formLayout(model_tab, e=True, af=[[spine_bot_btn,  "left", WIDTH()/2-35 ],[spine_bot_btn, "bottom",HEIGHT()/2]])
+cmds.formLayout(model_tab, e=True, af=[[head_btn,   "left", WIDTH()/2-15 ],[head_btn,   "top",70]])
+cmds.formLayout(model_tab, e=True, af=[[jaw_btn,    "left", WIDTH()/2-10 ],[jaw_btn,    "top",110]])
+cmds.formLayout(model_tab, e=True, af=[[spine_top_btn,  "left", WIDTH()/2-30 ],[spine_top_btn, "top",140]])
+cmds.formLayout(model_tab, e=True, af=[[spine_mid_btn,  "left", WIDTH()/2-25 ],[spine_mid_btn, "bottom",HEIGHT()/2+20]])
+cmds.formLayout(model_tab, e=True, af=[[spine_bot_btn,  "left", WIDTH()/2-35 ],[spine_bot_btn, "bottom",HEIGHT()/2-20]])
 cmds.formLayout(model_tab, e=True, af=[[root_btn, "left", WIDTH()/2-45 ],[root_btn, "top",HEIGHT()/2]])
 cmds.formLayout(model_tab, e=True, af=[[master_btn, "left", WIDTH()/2-100],[master_btn, "bottom",60]])
 
 # Setup the reset buttons
 resetall_btn = cmds.button(label="Reset All",      w=WIDTH()/2-20, command=reset_all_ctrls)
 resetsel_btn = cmds.button(label="Reset Selected", w=WIDTH()/2-20, command=reset_selected_ctrl)
-togctrls_btn = cmds.button(label="Show Controls",  w=WIDTH()/2-20, command=toggle_ctrl_vis)
-togjoint_btn = cmds.button(label="Show Joints",    w=WIDTH()/2-20, command=toggle_jnt_vis)
+togctrls_btn = cmds.button(label="", w=WIDTH()/2-20, command=toggle_ctrl_vis)
+togjoint_btn = cmds.button(label="", w=WIDTH()/2-20, command=toggle_jnt_vis)
 cmds.formLayout(model_tab, e=True, af=[[resetsel_btn,"left",  10],[resetsel_btn,"bottom",10]])
 cmds.formLayout(model_tab, e=True, af=[[resetall_btn,"right", 10],[resetall_btn,"bottom",10]])
 cmds.formLayout(model_tab, e=True, af=[[togctrls_btn,"left",  10],[togctrls_btn,"top",10]])
 cmds.formLayout(model_tab, e=True, af=[[togjoint_btn,"right", 10],[togjoint_btn,"top",10]])
+update_vis_buttons()
 
 ## Setup the foot tab ##
 cmds.setParent( tab_layout )
@@ -266,7 +286,7 @@ transforms_text_list = cmds.textScrollList(numberOfRows=24,
                                            selectCommand=insert_renamefield_text)
 # a text box for renaming
 cmds.separator(style="none", height=8)
-rename_field = cmds.textField(w=WIDTH()-8)
+rename_field = cmds.textField(w=WIDTH()-8, enterCommand=rename)
 cmds.separator(style="none", height=2)
 rename_button = cmds.button(label='Rename', w=WIDTH()-8, command=rename)
 
